@@ -7,7 +7,7 @@ import {
   limblessLizard,
   twitter,
   wormsGame,
-} from './indexImages';
+} from './indexImages'
 
 interface SectorOptions {
   shape?: 'circle'

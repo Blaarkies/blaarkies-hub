@@ -19,7 +19,7 @@
 <script lang="ts">
 import { userThemePreferenceKey } from './common/localStorageKeys'
 import RadialContainer from './components/RadialContainer.vue';
-import { themeService } from './services';
+import { firebaseService, themeService } from './services';
 import { MainRadialContainerConfig } from './common/componentConfig';
 
 let themeMap = {
@@ -31,6 +31,7 @@ let themeIconMap = {
   'light': 'mdi-white-balance-sunny',
   'dark': 'mdi-weather-night',
 }
+
 
 export default {
   name: 'App',
