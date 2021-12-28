@@ -1,3 +1,5 @@
+import { Common } from './common';
+
 export class Vector2 {
 
   static readonly zero = new Vector2(0, 0);
@@ -81,15 +83,15 @@ export class Vector2 {
     return new Vector2(this.x, this.y);
   }
 
-  // lerp(other: Vector2, ratio: number = .5): Vector2 {
-  //   this.x = this.x.lerp(other.x, ratio);
-  //   this.y = this.y.lerp(other.y, ratio);
-  //   return this;
-  // }
+  lerp(other: Vector2, ratio: number = .5): Vector2 {
+    this.x = Common.lerp(this.x, other.x, ratio);
+    this.y = Common.lerp(this.y, other.y, ratio);
+    return this;
+  }
 
-  // lerpClone(other: Vector2, ratio: number = .5): Vector2 {
-  //   return this.clone().lerp(other, ratio);
-  // }
+  lerpClone(other: Vector2, ratio: number = .5): Vector2 {
+    return this.clone().lerp(other, ratio);
+  }
 
   toString(): string {
     return `${this.x} ${this.y}`;

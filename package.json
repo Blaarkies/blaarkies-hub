@@ -1,11 +1,13 @@
 {
   "name": "blaarkies-hub",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "serve": "vite build & vite preview",
     "build": "vite build",
-    "dev": "vite",
-    "preview": "vite preview"
+    "dev": "vite --mode development",
+    "host": "vite --host",
+    "preview": "vite preview",
+    "deploy": "npm run build --mode production & firebase deploy"
   },
   "dependencies": {
     "@mdi/font": "5.9.55",

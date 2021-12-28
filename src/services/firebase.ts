@@ -1,11 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
-import { getAnalytics } from 'firebase/analytics'
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { environmentService } from './environment';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: 'AIzaSyBvRGEq7amTw_r-vWa7heNYm0fM93e7oFE',
   authDomain: 'blaarkies-hub.firebaseapp.com',
@@ -17,10 +12,52 @@ const firebaseConfig = {
 }
 
 // Initialize Firebase
+// TODO: error when offline
+// FirebaseError: Installations: Could not process request. Application offline. (installations/app-offline).
+//   at triggerRegistrationIfNecessary (get-installation-entry.ts:98)
 const app = initializeApp(firebaseConfig)
-const analytics = getAnalytics(app)
+
+let analytics;
+let logEvent = (instance, name, details) => void 0
+
+const importAnalytics = async () => {
+  await import('firebase/analytics')
+    .then(module => {
+      analytics = module.getAnalytics(app)
+      logEvent = module.logEvent
+    })
+}
+importAnalytics().catch(e => console.error('AdBlocker prevented loading the Firebase Analytics module.\n', e))
+
+let env = environmentService.buildType
+const log = (name: string, details: Object = {}) => {
+  let newDetails = {
+    ...flattenObject(details),
+    environment: env === 'production' ? 'prod' : 'dev',
+  }
+
+  env === 'production'
+    ? logEvent(analytics, name, newDetails)
+    : console.info('%c analytics.logEvent()', 'color: #9ff',
+      name, details)
+}
+
+function flattenObject(object: {} | null, parentKey = ''): {} {
+  const keyPrefix = parentKey ? parentKey + '_' : ''
+  return !object // don't traverse null values
+    ? object
+    : Object.entries(object)
+      .reduce((sum, [key, value]) => (typeof value === 'object')
+        ? {
+          ...sum,
+          ...this.flattenObject(value, key),
+        }
+        : {
+          ...sum,
+          [keyPrefix + key]: value,
+        }, {})
+}
 
 export const firebaseService = {
-  app,
-  analytics,
+  log,
 }

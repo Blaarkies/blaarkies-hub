@@ -1,6 +1,6 @@
 <template>
 
-  <div class="stack">
+  <div class="stack layout-radial-selector">
     <svg width="0" height="0">
       <defs>
         <clipPath :id="clipPathId" clipPathUnits="objectBoundingBox">
@@ -9,24 +9,24 @@
       </defs>
     </svg>
 
-    <a :href="url" target="_blank" :ref="label" class="hidden"></a>
+    <a :href="url" target="_blank" :ref="label" class="display-none"></a>
 
     <div class="sector"
          v-bind:style="{clipPath: `url(#${clipPathId})`,
                         backgroundColor: color,
                         '--radius': `${radius}px`}"
-         @click="$refs[label].click()">
+         @click="clickSector()">
     </div>
 
     <div v-bind:style="{left: `${logoLocation.x}%`,
                         top: `${logoLocation.y}%`,
-                        '--ratio-image': `${this.ratioImage * 100}%`}"
+                        '--ratio-image': `${this.logoRatioHeight * 100}%`}"
          class="logo-container">
       <img :src="source"
            v-bind:style="{borderRadius: options.shape === 'circle' ? '50%' : '',
                           background: options.background}"
            class="logo-image" />
-      <div class="text label">{{ label }}</div>
+      <div class="text label center">{{ label }}</div>
     </div>
 
   </div>
@@ -34,7 +34,8 @@
 </template>
 
 <script lang="ts">
-import { Vector2 } from '../common/vector2';
+import { Common, Vector2 } from '../common';
+import { deviceService, firebaseService } from '../services';
 
 export default {
   name: 'RadialSector',
@@ -43,6 +44,7 @@ export default {
     index: Number,
     sectorCount: Number,
     radius: Number,
+    logoRatioHeight: Number,
     label: String,
     source: String,
     color: String,
@@ -55,15 +57,14 @@ export default {
 
   data: () => ({
     ratioHole: .5,
-    ratioImage: .18,
   }),
 
   computed: {
-    clipPathId() {
+    clipPathId(): string {
       return `donut-curve-${this.index}`;
     },
 
-    clipPathString() {
+    clipPathString(): string {
       let PI2 = 2 * Math.PI;
       let startAngle = this.index * PI2 / this.sectorCount
       let endAngle = startAngle + PI2 / this.sectorCount
@@ -85,24 +86,36 @@ export default {
       let radToDeg = 57.2958;
       let innerArc = this.ratioHole * .5;
       return `M${calibrated.eo.x},${calibrated.eo.y}
-      A.5,.5,${deltaAngle * radToDeg},0,0,${calibrated.so.x},${calibrated.so.y}
-      L${calibrated.si.x},${calibrated.si.y}
-      A${innerArc},${innerArc},${deltaAngle * radToDeg},0,1,${calibrated.ei.x},${calibrated.ei.y}
-      Z`
+              A.5,.5,${deltaAngle * radToDeg},0,0,${calibrated.so.x},${calibrated.so.y}
+              L${calibrated.si.x},${calibrated.si.y}
+              A${innerArc},${innerArc},${deltaAngle * radToDeg},0,1,${calibrated.ei.x},${calibrated.ei.y}
+              Z`
         .replaceAll(' ', '')
         .replaceAll('\n', '')
     },
 
-    logoLocation() {
+    logoLocation(): Vector2 {
       let PI2 = 2 * Math.PI;
       let startAngle = this.index * PI2 / this.sectorCount
       let endAngle = startAngle + PI2 / this.sectorCount
-      let middle = Vector2.fromDirection((startAngle + endAngle) * .5)
+      let ratioLogoWidth = this.logoRatioHeight * 1.5
+      let ratioLogoHeight = deviceService.isMobile ? this.logoRatioHeight * 1.9 : this.logoRatioHeight
+      let middle = Vector2.fromDirection(Common.lerp(startAngle, endAngle))
         .multiply(.5) // scale to radius mode
         .multiply(.75) // location between inner & outer
-        .add(.5 - .5 * this.ratioImage) // calibrate, and translate for half image size
+        .add( // calibrate, and translate for half image size
+          .5 - .5 * ratioLogoWidth,
+          .5 - .5 * ratioLogoHeight)
         .multiply(100) // convert to %-units
       return middle
+    },
+  },
+
+  methods: {
+    clickSector() {
+      this.$refs[this.label].click()
+
+      firebaseService.log(`Click radial link ${this.label}`)
     },
   },
 
@@ -114,6 +127,7 @@ export default {
 .sector {
   width: calc(var(--radius) * 2);
   aspect-ratio: 1;
+  pointer-events: all;
   cursor: pointer;
   transition: .2s ease-in-out;
   opacity: .2;
@@ -125,24 +139,26 @@ export default {
 
 .logo-container {
   position: absolute;
-  pointer-events: none;
   height: var(--ratio-image);
-  aspect-ratio: 1;
+  aspect-ratio: 1.5;
 
   display: grid;
   justify-items: center;
-  gap: .4em;
-  grid-template-rows: 70% 30%;
+  align-items: center;
+  gap: .2em;
+  grid-template-rows: 70% auto;
 
   border-radius: 50%;
+  transition: .5s ease-in-out;
+
+  .logo-image {
+    height: 100%;
+  }
 }
 
-.logo-image {
-  height: 100%;
-}
-
-.logo-label {
-  text-align: center;
+.layout-radial-selector {
+  position: relative;
+  pointer-events: none;
 }
 
 </style>

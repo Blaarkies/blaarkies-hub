@@ -4,12 +4,15 @@
       <v-main>
         <div class="stack layout-app">
           <div class="theme-buttons">
-            <v-btn :icon="themeIcon" @click="toggleTheme" />
+            <ThemeController @themeName="themeName = $event" />
           </div>
 
-          <div class="radial-container-size-wrapper">
+          <div class="main-content">
+            <div class="text title center">Blaarkies Hub</div>
+
             <RadialContainer :config="mainRadialContainerConfig" />
           </div>
+
         </div>
       </v-main>
     </v-app>
@@ -17,26 +20,16 @@
 </template>
 
 <script lang="ts">
-import { userThemePreferenceKey } from './common/localStorageKeys'
 import RadialContainer from './components/RadialContainer.vue';
-import { firebaseService, themeService } from './services';
-import { MainRadialContainerConfig } from './common/componentConfig';
-
-let themeMap = {
-  'light': 'dark',
-  'dark': 'light',
-  includes: (theme: string) => Object.keys(themeMap).includes(theme),
-}
-let themeIconMap = {
-  'light': 'mdi-white-balance-sunny',
-  'dark': 'mdi-weather-night',
-}
-
+import ThemeController from './components/ThemeController.vue';
+import { firebaseService } from './services';
+import { MainRadialContainerConfig } from './common';
 
 export default {
   name: 'App',
 
   components: {
+    ThemeController,
     RadialContainer,
   },
 
@@ -45,32 +38,6 @@ export default {
     mainRadialContainerConfig: MainRadialContainerConfig,
   }),
 
-  computed: {
-    themeIcon(): string {
-      return themeIconMap[this.themeName];
-    },
-  },
-
-  methods: {
-    toggleTheme() {
-      this.themeName = themeMap[this.themeName] ?? 'dark'
-      localStorage.setItem(userThemePreferenceKey, this.themeName)
-      themeService.setTheme(this.themeName)
-    },
-  },
-
-  created() {
-    let localPreference = localStorage.getItem(userThemePreferenceKey)
-    if (localPreference && themeMap.includes(localPreference)) {
-      this.themeName = localPreference
-      themeService.setTheme(this.themeName)
-      return
-    }
-
-    const browserPreferenceDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
-    this.themeName = browserPreferenceDarkMode ? 'dark' : 'light'
-    themeService.setTheme(this.themeName)
-  }
 }
 </script>
 
@@ -89,11 +56,12 @@ export default {
 }
 
 .radial-container-size-wrapper {
-  height: 100vh;
-  //width: 100vw; // TODO: only resizes on height changes now. adding width: breaks aspect-ratio
-  aspect-ratio: 1;
   padding: 4em;
   place-self: center;
+}
+
+.main-content {
+  padding: 20px;
 }
 
 </style>

@@ -1,9 +1,10 @@
-import { Uid } from '../common/uid'
+import { Uid } from '../common';
 
 export type ThemeType = 'light' | 'dark'
+type ThemeCallback = (theme: ThemeType) => void
 
 let currentTheme: ThemeType
-let onThemeChangeCallbacks: { [key: string]: Function } = {}
+let onThemeChangeCallbacks: { [key: string]: ThemeCallback } = {}
 
 function getTheme(): ThemeType {
   return currentTheme;
@@ -11,10 +12,10 @@ function getTheme(): ThemeType {
 
 function setTheme(newValue: ThemeType) {
   currentTheme = newValue
-  Object.values(onThemeChangeCallbacks).forEach(cb => cb())
+  Object.values(onThemeChangeCallbacks).forEach(cb => cb(newValue))
 }
 
-function onThemeChangeEvent(callback: Function): string {
+function onThemeChangeEvent(callback: ThemeCallback): string {
   let key = Uid.new
   onThemeChangeCallbacks[key] = callback
   return key
