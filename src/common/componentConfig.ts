@@ -34,7 +34,7 @@ export const MainRadialContainerConfig: RadialContainerConfig = {
       label: 'Github',
       source: github,
       color: '#66BB6A',
-      url: 'https://github.com/Blaarkies/Presentable-Angular',
+      url: 'https://github.com/Blaarkies',
       options: {
         shape: 'circle',
         background: '#000',

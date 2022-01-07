@@ -13,7 +13,7 @@
              alt="A blaarkies cube"
              v-bind:style="{
                 maxHeight: `${radius * .5}px`,
-                transform: `rotate3d(${tiltDirection.y}, ${-tiltDirection.x}, 0, ${tiltAngle}deg)`
+                transform: `rotate3d(${tiltDirection.x}, ${tiltDirection.y}, 0, ${tiltAngle}deg)`
              }"
         />
         <div class="text label center">Where would you like to go?</div>
@@ -30,6 +30,7 @@
                     :color="sector.color"
                     :url="sector.url"
                     :options="sector.options"
+                    @hover="updateActiveSector(i+1, $event)"
       />
 
     </div>
@@ -43,7 +44,6 @@ import CubeLogo from './CubeLogo.vue';
 import { deviceService } from '../services';
 
 let resizeHandler
-let pointerMoveHandler
 let deviceCallbackKey
 
 export default {
@@ -62,6 +62,18 @@ export default {
     isMobile: deviceService.getDevice().type === 'mobile',
   }),
 
+  methods: {
+    updateActiveSector(index: number, isHover: boolean) {
+      if (!isHover) {
+        this.tiltAngle = 0
+        return
+      }
+      let maxIndex = this.config.sectors.length
+      this.tiltAngle = 20
+      this.tiltDirection = Vector2.fromDirection(Math.PI * 2 * index / maxIndex + Math.PI * .5 - Math.PI / maxIndex)
+    },
+  },
+
   mounted() {
     deviceCallbackKey = deviceService.onDeviceChangeEvent(device => this.isMobile = device.type === 'mobile')
 
@@ -76,29 +88,10 @@ export default {
     }
     window.addEventListener('resize', resizeHandler)
     resizeHandler()
-
-    pointerMoveHandler = (event: PointerEvent) => {
-      let logo = this.$refs.blaarkiesLogo
-      if (!logo) {
-        return
-      }
-      let radialContainer = logo.parentElement;
-      let center = new Vector2(radialContainer.offsetLeft, logo.offsetTop).addVector2(
-        new Vector2(radialContainer.offsetWidth, logo.offsetHeight).multiply(.5))
-
-      let cursor = new Vector2(event.x, event.offsetY);
-      this.debugVector = cursor.clone()
-
-      let difference = center.subtractVector2(cursor)
-      this.tiltAngle = Common.coerceAtMost(18 * difference.length / this.radius, 20)
-      this.tiltDirection = difference.clone()
-    }
-    this.$refs.radialContainerWrapper.addEventListener('pointermove', pointerMoveHandler)
   },
 
   unmounted() {
     window?.removeEventListener('resize', resizeHandler)
-    this.$refs.radialContainerWrapper?.removeEventListener('pointermove', pointerMoveHandler)
     deviceService.clearDeviceChangeEvent(deviceCallbackKey)
   }
 }
@@ -131,6 +124,10 @@ export default {
       .main-image {
         border-radius: 40%;
         aspect-ratio: 1;
+      }
+
+      img {
+        transition: .5s ease-in-out;
       }
     }
   }

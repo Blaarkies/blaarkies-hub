@@ -111,4 +111,23 @@ export class Vector2 {
     this.y = this.y / length;
     return this;
   }
+
+  rotate(angle: number): Vector2 {
+    let x = this.x;
+    let y = this.y;
+
+    this.x = x * Math.cos(angle) - y * Math.sin(angle)
+    this.y = x * Math.sin(angle) + y * Math.cos(angle)
+    return this;
+  }
+
+  rotateByDistance(circumferenceToRotate: number): Vector2 {
+    let PI2 = Math.PI * 2;
+    let r = this.length;
+    let perimeter = PI2 * r;
+    let ratioOfChange = circumferenceToRotate / perimeter
+    let angleOfChange = ratioOfChange * PI2
+    return this.rotate(angleOfChange)
+  }
+
 }
