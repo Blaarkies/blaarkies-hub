@@ -20,10 +20,9 @@
 </template>
 
 <script lang="ts">
-import RadialContainer from './components/RadialContainer.vue';
-import ThemeController from './components/ThemeController.vue';
-import { firebaseService } from './services';
-import { MainRadialContainerConfig } from './common';
+import RadialContainer from './components/RadialContainer.vue'
+import ThemeController from './components/ThemeController.vue'
+import { MainRadialContainerConfig } from './common'
 
 export default {
   name: 'App',

@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { environmentService } from './environment';
+import { environmentService } from './environment'
 
 const firebaseConfig = {
   apiKey: 'AIzaSyBvRGEq7amTw_r-vWa7heNYm0fM93e7oFE',
@@ -17,7 +17,7 @@ const firebaseConfig = {
 //   at triggerRegistrationIfNecessary (get-installation-entry.ts:98)
 const app = initializeApp(firebaseConfig)
 
-let analytics;
+let analytics
 let logEvent = (instance, name, details) => void 0
 
 const importAnalytics = async () => {

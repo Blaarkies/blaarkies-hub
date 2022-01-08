@@ -38,8 +38,8 @@
 </template>
 
 <script lang="ts">
-import { Common, Vector2 } from '../common';
-import { deviceService, firebaseService } from '../services';
+import { Common, Vector2 } from '../common'
+import { deviceService, firebaseService } from '../services'
 
 export default {
   name: 'RadialSector',
@@ -72,14 +72,14 @@ export default {
 
   computed: {
     clipPathId(): string {
-      return `donut-curve-${this.index}`;
+      return `donut-curve-${this.index}`
     },
 
     clipPathString(): string {
-      let PI2 = 2 * Math.PI;
+      let PI2 = 2 * Math.PI
       let startAngle = this.index * PI2 / this.sectorCount
       let endAngle = startAngle + PI2 / this.sectorCount
-      let deltaAngle = endAngle - startAngle;
+      let deltaAngle = endAngle - startAngle
 
       let startOuter = Vector2.fromDirection(startAngle).multiply(.5)
       let startInner = startOuter.clone().multiply(this.ratioHole)
@@ -95,8 +95,8 @@ export default {
         ei: endInner.rotateByDistance(-gap).addVector2(calibrationVector),
       }
 
-      let radToDeg = 57.2958;
-      let innerArc = this.ratioHole * .5;
+      let radToDeg = 57.2958
+      let innerArc = this.ratioHole * .5
       return `M${calibrated.eo.x},${calibrated.eo.y}
               A.5,.5,${deltaAngle * radToDeg},0,0,${calibrated.so.x},${calibrated.so.y}
               L${calibrated.si.x},${calibrated.si.y}
@@ -107,7 +107,7 @@ export default {
     },
 
     translationDirection(): string {
-      let PI2 = 2 * Math.PI;
+      let PI2 = 2 * Math.PI
       let startAngle = this.index * PI2 / this.sectorCount
       let endAngle = startAngle + PI2 / this.sectorCount
       let directionVector = Vector2.fromDirection(Common.lerp(startAngle, endAngle))
@@ -116,7 +116,7 @@ export default {
     },
 
     logoLocation(): Vector2 {
-      let PI2 = 2 * Math.PI;
+      let PI2 = 2 * Math.PI
       let startAngle = this.index * PI2 / this.sectorCount
       let endAngle = startAngle + PI2 / this.sectorCount
       let ratioLogoWidth = this.logoRatioHeight * 1.5
@@ -154,7 +154,7 @@ export default {
   pointer-events: none;
 
   --translate-values: 0, 0;
-  transition: transform .2s ease-out .2s;
+  transition: transform .2s ease-out .15s;
 
   &.shift-out {
     transform: translate(var(--translate-values));

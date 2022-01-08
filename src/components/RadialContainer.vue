@@ -6,8 +6,6 @@
       <div class="layout-logo"
            v-bind:style="{width: `${radius * .7}px`}"
            ref="blaarkiesLogo">
-
-        <CubeLogo />
         <img class="main-image"
              :src="config.sourceMain"
              alt="A blaarkies cube"
@@ -38,10 +36,10 @@
 </template>
 
 <script lang="ts">
-import RadialSector from './RadialSector.vue';
-import { Common, Vector2 } from '../common';
-import CubeLogo from './CubeLogo.vue';
-import { deviceService } from '../services';
+import RadialSector from './RadialSector.vue'
+import { Common, Vector2 } from '../common'
+import CubeLogo from './CubeLogo.vue'
+import { deviceService } from '../services'
 
 let resizeHandler
 let deviceCallbackKey

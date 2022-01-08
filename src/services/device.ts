@@ -44,7 +44,7 @@ function setupUpdates() {
 }
 
 function getDevice(): Device {
-  return device;
+  return device
 }
 
 function onDeviceChangeEvent(callback: DeviceCallback): string {

@@ -1,1 +1,1 @@
-export const userThemePreferenceKey = 'blaarkies-hub-user-theme-preference';
+export const userThemePreferenceKey = 'blaarkies-hub-user-theme-preference'
