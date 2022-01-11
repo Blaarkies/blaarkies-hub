@@ -1,5 +1,6 @@
-# blaarkies-hub
-Vuejs website to link up various projects in one place
+# Blaarkies Hub
+### [Website Link](http://blaarkies.com/)
+Vue3 website to link up various projects in one place
 
 ---
 ### *Developer Info*
