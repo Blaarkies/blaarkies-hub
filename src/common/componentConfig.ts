@@ -44,13 +44,13 @@ export const MainRadialContainerConfig: RadialContainerConfig = {
       label: 'Angular Controls',
       source: buildingAngularControls,
       color: '#29B6F6',
-      url: 'https://control-value-accessor.blaarkies.com/',
+      url: 'https://control-value-accessor.netlify.app',
     },
     {
       label: 'Worms Game',
       source: wormsGame,
       color: '#AB47BC',
-      url: 'https://ec-2019-prototype.blaarkies.com/',
+      url: 'https://ec-2019-prototype.netlify.app',
       options: {
         shape: 'circle',
       },
@@ -69,7 +69,7 @@ export const MainRadialContainerConfig: RadialContainerConfig = {
       label: 'Limbless Lizard',
       source: limblessLizard,
       color: '#FF7043',
-      url: 'https://reactjs-games.blaarkies.com/limbless-lizard',
+      url: 'https://reactjs-games-blaarkies.netlify.app/limbless-lizard',
       options: {
         shape: 'circle',
       },

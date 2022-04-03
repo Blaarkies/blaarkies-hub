@@ -1,23 +1,24 @@
-<template>
-  <v-theme-provider :theme="themeName">
-    <v-app>
-      <v-main>
-        <div class="stack layout-app">
-          <div class="theme-buttons">
-            <ThemeController @themeName="themeName = $event" />
+
+  <template>
+    <v-theme-provider :theme="themeName">
+      <v-app>
+        <v-main>
+          <div class="stack layout-app">
+            <div class="theme-buttons">
+              <ThemeController @themeName="themeName = $event" />
+            </div>
+
+            <div class="main-content">
+              <div class="text title center">Blaarkies Hub</div>
+
+              <RadialContainer :config="mainRadialContainerConfig" />
+            </div>
+
           </div>
-
-          <div class="main-content">
-            <div class="text title center">Blaarkies Hub</div>
-
-            <RadialContainer :config="mainRadialContainerConfig" />
-          </div>
-
-        </div>
-      </v-main>
-    </v-app>
-  </v-theme-provider>
-</template>
+        </v-main>
+      </v-app>
+    </v-theme-provider>
+  </template>
 
 <script lang="ts">
 import RadialContainer from './components/RadialContainer.vue'
